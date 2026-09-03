@@ -1,0 +1,29 @@
+[
+  {
+    "id": "owner-name",
+    "match": "exact",
+    "triggers": [
+      "what is our owner name"
+    ],
+    "response": "His name is vignesh"
+  },
+  {
+    "id": "working-status",
+    "match": "includes",
+    "triggers": [
+      "are you working",
+      "aura are you there",
+      "are you online"
+    ],
+    "response": "I am here and working for you, {addressUserAs}."
+  },
+  {
+    "id": "need-help",
+    "match": "includes",
+    "triggers": [
+      "do you need anything",
+      "anything else"
+    ],
+    "response": "I am ready to help with your next task, {addressUserAs}."
+  }
+]

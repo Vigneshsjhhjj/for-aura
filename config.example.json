@@ -1,0 +1,75 @@
+{
+  "assistantName": "AURA",
+  "ownerName": "Owner",
+  "persona": {
+    "addressUserAs": "master"
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 4545,
+    "trustLocalNetwork": true
+  },
+  "auth": {
+    "ownerToken": "change-this-owner-token",
+    "requireOwnerTokenForRemote": true
+  },
+  "modes": {
+    "alwaysListen": true,
+    "autoStartListeningOnLoad": true,
+    "startupGreetingEnabled": true,
+    "startupGreetingText": "AURA is working for you.",
+    "autoLearn": true,
+    "cloudSync": false,
+    "allowDangerousSystemActions": false,
+    "preferOnlineForChat": true,
+    "allowBrowserAutomation": true,
+    "ownerOnlyTransparency": true,
+    "proactiveFollowUpMs": 16000,
+    "idlePresenceEnabled": true,
+    "idlePresenceMs": 300000,
+    "defaultInputLanguage": "en-IN",
+    "defaultReplyLanguage": "en-US"
+  },
+  "models": {
+    "offline": {
+      "provider": "ollama",
+      "baseUrl": "http://127.0.0.1:11434",
+      "model": "llama3.1:8b"
+    },
+    "online": {
+      "provider": "openai",
+      "baseUrl": "https://api.openai.com/v1",
+      "apiKey": "",
+      "model": "gpt-5.4-mini",
+      "apiMode": "chat_completions"
+    }
+  },
+  "voices": {
+    "mode": "browser",
+    "rate": 0.96,
+    "pitch": 1,
+    "volume": 1,
+    "preferredVoiceNames": [
+      "Microsoft Heera Desktop",
+      "Microsoft Aria Online (Natural)",
+      "Google UK English Female"
+    ],
+    "customTts": {
+      "provider": "none",
+      "baseUrl": "",
+      "model": "",
+      "enabled": false
+    }
+  },
+  "storage": {
+    "localDbPath": "./data/aura.db.json",
+    "voiceSamplesDir": "./data/voice-samples",
+    "manualResponsesPath": "./data/manual-responses.json",
+    "cloud": {
+      "provider": "supabase",
+      "url": "",
+      "apiKey": "",
+      "table": "aura_sync"
+    }
+  }
+}

@@ -1,0 +1,1074 @@
+{
+  "meta": {
+    "version": 1,
+    "assistantName": "AURA",
+    "ownerName": "vignesh",
+    "createdAt": "2026-04-24T00:00:00.000Z",
+    "updatedAt": "2026-09-03T22:33:25.672Z"
+  },
+  "preferences": {
+    "inputLanguage": "en-IN",
+    "replyLanguage": "en-US",
+    "alwaysListen": false,
+    "voiceEnabled": true,
+    "allowDangerousSystemActions": false,
+    "allowBrowserAutomation": true
+  },
+  "profile": {
+    "identity": {
+      "preferredName": "Nila",
+      "aliases": [
+        "Arun",
+        "Nila"
+      ],
+      "facts": {
+        "preferredName": {
+          "key": "preferredName",
+          "value": "Nila",
+          "sourceText": "my name is Nila",
+          "createdAt": "2026-04-27T03:54:49.613Z",
+          "updatedAt": "2026-04-27T03:59:20.549Z"
+        }
+      }
+    },
+    "voiceProfiles": [],
+    "activeVoiceProfileId": null,
+    "languagesUsed": [],
+    "favoriteApps": [],
+    "favoriteWebsites": [],
+    "conversationStyle": "friendly",
+    "lastKnownMood": "supportive"
+  },
+  "memories": [
+    {
+      "id": "cc4a9d95-ea4c-4bf3-b2f6-beb0601f773c",
+      "kind": "conversation",
+      "text": "User: what is the new movie name\nAURA: I am in local offline mode right now, master. I can still help with commands, memory, tasks, and laptop actions. I also found this in memory: User: hii\nAURA: I am in local offline mode right now, master. I can still help with commands, memory, tasks, and laptop actions. I also found this in memory: AURA: AURA is working for you, master. For advanced long answers, connect OpenAI online or Ollama offline. For advanced long answers, connect OpenAI online or Ollama offline.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-17T21:08:22.970Z"
+    },
+    {
+      "id": "726aec25-ec2b-42b0-b63d-4228c0ba490d",
+      "kind": "conversation",
+      "text": "User: hii\nAURA: I am in local offline mode right now, master. I can still help with commands, memory, tasks, and laptop actions. I also found this in memory: AURA: AURA is working for you, master. For advanced long answers, connect OpenAI online or Ollama offline.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-17T21:07:14.437Z"
+    },
+    {
+      "id": "d188834e-a6af-4b70-ae34-f14e6ec69f40",
+      "kind": "assistant-presence",
+      "text": "AURA: AURA is working for you, master.",
+      "language": "en-US",
+      "tags": [
+        "startup-greeting",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-17T21:06:49.462Z"
+    },
+    {
+      "id": "5c23b72f-15c1-4298-862b-40612e21b2d3",
+      "kind": "assistant-presence",
+      "text": "AURA: Any more help, master?",
+      "language": "en-US",
+      "tags": [
+        "idle-help",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T03:16:51.058Z"
+    },
+    {
+      "id": "163f1aa7-cea1-48dc-a16a-9edd7f2e38a5",
+      "kind": "conversation",
+      "text": "User: hi aura\nAURA: I am running in limited local mode right now. I can still help with browser, system, memory, and dashboard actions, but your online or offline model is not connected yet.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T03:14:11.568Z"
+    },
+    {
+      "id": "828f6293-c912-4afe-a050-1bb69439e436",
+      "kind": "assistant-presence",
+      "text": "AURA: Any more help, master?",
+      "language": "en-US",
+      "tags": [
+        "idle-help",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T03:09:56.220Z"
+    },
+    {
+      "id": "a60b8361-8b16-4713-8ecb-291f04acd7ee",
+      "kind": "assistant-presence",
+      "text": "AURA: Any more help, master?",
+      "language": "en-US",
+      "tags": [
+        "idle-help",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T03:04:37.912Z"
+    },
+    {
+      "id": "ebad7b12-68b5-4815-9bf0-9ccb7a53b3ee",
+      "kind": "assistant-presence",
+      "text": "AURA: AURA is working for you, master.",
+      "language": "en-US",
+      "tags": [
+        "startup-greeting",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T03:04:28.934Z"
+    },
+    {
+      "id": "2e00d48f-f047-424e-9f6a-8abc60e6d4a7",
+      "kind": "assistant-presence",
+      "text": "AURA: Any more help, master?",
+      "language": "en-US",
+      "tags": [
+        "idle-help",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T03:03:08.883Z"
+    },
+    {
+      "id": "a4abce6f-24df-4b98-b98c-44e5e174103f",
+      "kind": "conversation",
+      "text": "User: hello\nAURA: I am running in limited local mode right now. I can still help with browser, system, memory, and dashboard actions, but your online or offline model is not connected yet.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T02:59:15.836Z"
+    },
+    {
+      "id": "6156d476-ae0a-4564-a861-5fc9e2d90a32",
+      "kind": "conversation",
+      "text": "User: ok\nAURA: I am running in limited local mode right now. I can still help with browser, system, memory, and dashboard actions, but your online or offline model is not connected yet.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T02:59:06.997Z"
+    },
+    {
+      "id": "15d0fdcb-0a11-4f0b-b980-f3785386dd06",
+      "kind": "conversation",
+      "text": "User: hi  aura\nAURA: I am running in limited local mode right now. I can still help with browser, system, memory, and dashboard actions, but your online or offline model is not connected yet.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T02:58:57.821Z"
+    },
+    {
+      "id": "821ffeb5-d489-4be3-a2bd-739142409036",
+      "kind": "assistant-presence",
+      "text": "AURA: AURA is working for you, master.",
+      "language": "en-US",
+      "tags": [
+        "startup-greeting",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T02:58:28.566Z"
+    },
+    {
+      "id": "54e6b19d-651a-4696-a54c-45048d543e1e",
+      "kind": "assistant-presence",
+      "text": "AURA: AURA is working for you, master.",
+      "language": "en-US",
+      "tags": [
+        "startup-greeting",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-07-05T02:58:08.148Z"
+    },
+    {
+      "id": "112c901c-8438-4045-bc63-b22af65ea963",
+      "kind": "assistant-presence",
+      "text": "AURA: AURA is working for you, master.",
+      "language": "en-US",
+      "tags": [
+        "startup-greeting",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-05-03T01:46:45.906Z"
+    },
+    {
+      "id": "321db209-37bb-4229-a678-480733987deb",
+      "kind": "assistant-presence",
+      "text": "AURA: AURA is working for you, master.",
+      "language": "en-US",
+      "tags": [
+        "startup-greeting",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-05-03T01:43:25.414Z"
+    },
+    {
+      "id": "7442f047-2fdc-4d94-a284-bfb68bb77d9c",
+      "kind": "assistant-presence",
+      "text": "AURA: Any more help, master?",
+      "language": "en-US",
+      "tags": [
+        "idle-help",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-05-01T22:25:04.344Z"
+    },
+    {
+      "id": "8eb71af2-d053-4950-8f0b-c8b08c086451",
+      "kind": "conversation",
+      "text": "User: what is our owner name\nAURA: His name is vignesh.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "manual-response"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-05-01T22:25:04.220Z"
+    },
+    {
+      "id": "b8180a88-87b5-439f-9566-552c9049080f",
+      "kind": "assistant-presence",
+      "text": "AURA: AURA is working for you, master.",
+      "language": "en-US",
+      "tags": [
+        "startup-greeting",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-05-01T22:21:06.689Z"
+    },
+    {
+      "id": "e0196cf0-7b56-4e61-8d80-dae80356c642",
+      "kind": "conversation",
+      "text": "User: what is our owner name\nAURA: His name is vignesh.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "manual-response"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-05-01T22:21:06.585Z"
+    },
+    {
+      "id": "b8491180-1ea7-455d-84c6-ae04e184115b",
+      "kind": "assistant-follow-up",
+      "text": "AURA: I am still here with you. What do you want to do next?",
+      "language": "en-US",
+      "tags": [
+        "follow-up",
+        "assistant-initiated"
+      ],
+      "importance": 3,
+      "metadata": {},
+      "createdAt": "2026-04-27T04:20:42.885Z"
+    },
+    {
+      "id": "f1d65a1e-643e-4016-97ed-b0edba1deff6",
+      "kind": "conversation",
+      "text": "User: what is my name\nAURA: Your name is Nila. I have it saved in your long-term memory.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "profile-memory"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-04-27T03:59:20.646Z"
+    },
+    {
+      "id": "5a9ed972-4b16-4cd7-b2cd-092bd2fbba17",
+      "kind": "conversation",
+      "text": "User: my name is Nila\nAURA: I will remember that your name is Nila.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "profile-memory"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-04-27T03:59:20.550Z"
+    },
+    {
+      "id": "114fdb34-f2bd-4fec-989c-3c5d12b155f5",
+      "kind": "personal-fact",
+      "text": "Stored preferredName: Nila",
+      "language": "en-US",
+      "tags": [
+        "fact",
+        "preferredName"
+      ],
+      "importance": 10,
+      "metadata": {
+        "sourceText": "my name is Nila"
+      },
+      "createdAt": "2026-04-27T03:59:20.549Z"
+    },
+    {
+      "id": "41c7accc-cbcb-4092-b7c5-e66b8359527a",
+      "kind": "conversation",
+      "text": "User: what is my name\nAURA: Your name is Arun. I have it saved in your long-term memory.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "profile-memory"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-04-27T03:54:49.689Z"
+    },
+    {
+      "id": "2d580107-991e-4b19-9192-ff2c707d6fd4",
+      "kind": "conversation",
+      "text": "User: my name is Arun\nAURA: I will remember that your name is Arun.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "profile-memory"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-04-27T03:54:49.614Z"
+    },
+    {
+      "id": "d78f8697-7156-44c9-9bdf-93feb5df2fb2",
+      "kind": "personal-fact",
+      "text": "Stored preferredName: Arun",
+      "language": "en-US",
+      "tags": [
+        "fact",
+        "preferredName"
+      ],
+      "importance": 10,
+      "metadata": {
+        "sourceText": "my name is Arun"
+      },
+      "createdAt": "2026-04-27T03:54:49.613Z"
+    },
+    {
+      "id": "c07fee96-9c30-4a12-91b6-1d73220f1d53",
+      "kind": "conversation",
+      "text": "User: hello aura\nAURA: I am running in limited local mode right now. I can still help with browser, system, memory, and dashboard actions, but your online or offline model is not connected yet.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-04-25T03:18:37.172Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "ed675c54-5dab-468c-9745-126ef875fbc8",
+      "type": "conversation",
+      "text": "what is the new movie name",
+      "success": true,
+      "latencyMs": 12,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-07-17T21:08:22.969Z"
+    },
+    {
+      "id": "a21a76e1-aa93-42ab-abeb-8c9c19fd7590",
+      "type": "voice",
+      "text": "what is the new movie name",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-07-17T21:08:22.957Z"
+    },
+    {
+      "id": "dc733ca2-6a5e-4517-ad6d-c0349a498874",
+      "type": "conversation",
+      "text": "hii",
+      "success": true,
+      "latencyMs": 41,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-07-17T21:07:14.436Z"
+    },
+    {
+      "id": "54af84fa-b42e-4dcc-87d8-f0afb9cc7e58",
+      "type": "voice",
+      "text": "hii",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-07-17T21:07:14.396Z"
+    },
+    {
+      "id": "c1b13f5b-08d0-494d-9831-45b5ce2a9bdf",
+      "type": "presence-prompt",
+      "text": "AURA is working for you, master.",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "startup-greeting",
+        "language": "en-US"
+      },
+      "createdAt": "2026-07-17T21:06:49.459Z"
+    },
+    {
+      "id": "39925f7a-dd8b-4733-9eb5-cdb5498d4e77",
+      "type": "presence-prompt",
+      "text": "Any more help, master?",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "idle-help",
+        "language": "en-US"
+      },
+      "createdAt": "2026-07-05T03:16:51.057Z"
+    },
+    {
+      "id": "31c7c36c-5f99-4d61-8e05-2cf7d913ec82",
+      "type": "conversation",
+      "text": "hi aura",
+      "success": true,
+      "latencyMs": 36,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-07-05T03:14:11.567Z"
+    },
+    {
+      "id": "a1be527f-cf1a-4d38-820d-f6b48dafcdb4",
+      "type": "voice",
+      "text": "hi aura",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-07-05T03:14:11.531Z"
+    },
+    {
+      "id": "f393b630-1751-421d-a9c8-371fc6c358f4",
+      "type": "presence-prompt",
+      "text": "Any more help, master?",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "idle-help",
+        "language": "en-US"
+      },
+      "createdAt": "2026-07-05T03:09:56.217Z"
+    },
+    {
+      "id": "3882be96-7d07-4bb0-ba24-b83090f3381d",
+      "type": "presence-prompt",
+      "text": "Any more help, master?",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "idle-help",
+        "language": "en-US"
+      },
+      "createdAt": "2026-07-05T03:04:37.911Z"
+    },
+    {
+      "id": "defdd6e1-2d33-4d30-abf0-da99039486c3",
+      "type": "presence-prompt",
+      "text": "AURA is working for you, master.",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "startup-greeting",
+        "language": "en-US"
+      },
+      "createdAt": "2026-07-05T03:04:28.932Z"
+    },
+    {
+      "id": "dbab5571-4210-4d84-a8ec-fa810ffd75fa",
+      "type": "presence-prompt",
+      "text": "Any more help, master?",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "idle-help",
+        "language": "en-US"
+      },
+      "createdAt": "2026-07-05T03:03:08.882Z"
+    },
+    {
+      "id": "53810608-e240-43ad-a4e4-16fa9e2ebcf9",
+      "type": "conversation",
+      "text": "hello",
+      "success": true,
+      "latencyMs": 8,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-07-05T02:59:15.832Z"
+    },
+    {
+      "id": "d28fb8c2-c5e5-4028-8ddd-33a2156fa7bc",
+      "type": "voice",
+      "text": "hello",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-07-05T02:59:15.824Z"
+    },
+    {
+      "id": "38627c33-5600-4b66-8ceb-b5f5536f357c",
+      "type": "conversation",
+      "text": "ok",
+      "success": true,
+      "latencyMs": 9,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-07-05T02:59:06.996Z"
+    },
+    {
+      "id": "1c8fe171-9545-4ce2-9052-a8446b524c71",
+      "type": "voice",
+      "text": "ok",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-07-05T02:59:06.987Z"
+    },
+    {
+      "id": "378ede60-2f76-47cc-98dd-6b8a9bed08f3",
+      "type": "conversation",
+      "text": "hi  aura",
+      "success": true,
+      "latencyMs": 82,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-07-05T02:58:57.818Z"
+    },
+    {
+      "id": "a49ad5f4-d920-44dd-a6bf-19351d1fc70b",
+      "type": "voice",
+      "text": "hi  aura",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-07-05T02:58:57.736Z"
+    },
+    {
+      "id": "3d6c28a1-f7bc-47a7-a124-a2562308fc2d",
+      "type": "presence-prompt",
+      "text": "AURA is working for you, master.",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "startup-greeting",
+        "language": "en-US"
+      },
+      "createdAt": "2026-07-05T02:58:28.561Z"
+    },
+    {
+      "id": "0d6ed7e7-a5d9-41b9-994b-5ce321763eae",
+      "type": "presence-prompt",
+      "text": "AURA is working for you, master.",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "startup-greeting",
+        "language": "en-US"
+      },
+      "createdAt": "2026-07-05T02:58:08.139Z"
+    },
+    {
+      "id": "41541ea1-0f44-4f7b-a4d5-4f7aae66ee84",
+      "type": "presence-prompt",
+      "text": "AURA is working for you, master.",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "startup-greeting",
+        "language": "en-US"
+      },
+      "createdAt": "2026-05-03T01:46:45.905Z"
+    },
+    {
+      "id": "7fca2b5b-06d4-433b-9615-c8a1f73111fa",
+      "type": "presence-prompt",
+      "text": "AURA is working for you, master.",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "startup-greeting",
+        "language": "en-US"
+      },
+      "createdAt": "2026-05-03T01:43:25.407Z"
+    },
+    {
+      "id": "2aee453f-05fa-49b4-816c-efafda6a3683",
+      "type": "presence-prompt",
+      "text": "Any more help, master?",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "idle-help",
+        "language": "en-US"
+      },
+      "createdAt": "2026-05-01T22:25:04.340Z"
+    },
+    {
+      "id": "7f651eaa-ad53-49bd-bbba-c5254b3171fd",
+      "type": "command",
+      "text": "add task buy milk",
+      "success": true,
+      "latencyMs": 1,
+      "metadata": {
+        "stderr": "",
+        "stdout": "",
+        "language": "en-US",
+        "actionName": "add-task"
+      },
+      "createdAt": "2026-05-01T22:25:04.320Z"
+    },
+    {
+      "id": "6d9a39be-7091-46c8-926a-82b63b3bcd6e",
+      "type": "voice",
+      "text": "add task buy milk",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-05-01T22:25:04.310Z"
+    },
+    {
+      "id": "ddd0e9b1-cd52-4e4b-8f82-13456ac3e08c",
+      "type": "conversation",
+      "text": "what is our owner name",
+      "success": true,
+      "latencyMs": 6,
+      "metadata": {
+        "language": "en-US",
+        "provider": "manual-response"
+      },
+      "createdAt": "2026-05-01T22:25:04.219Z"
+    },
+    {
+      "id": "d88f0ae3-d3a1-47d4-9518-538f06131d79",
+      "type": "voice",
+      "text": "what is our owner name",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-05-01T22:25:04.213Z"
+    },
+    {
+      "id": "ef67e45e-81ca-4f9f-8e49-3f7d369a1a6c",
+      "type": "presence-prompt",
+      "text": "AURA is working for you, master.",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "startup-greeting",
+        "language": "en-US"
+      },
+      "createdAt": "2026-05-01T22:21:06.688Z"
+    },
+    {
+      "id": "895c6be9-a7af-42e6-be71-01fa53051a55",
+      "type": "conversation",
+      "text": "what is our owner name",
+      "success": true,
+      "latencyMs": 6,
+      "metadata": {
+        "language": "en-US",
+        "provider": "manual-response"
+      },
+      "createdAt": "2026-05-01T22:21:06.584Z"
+    },
+    {
+      "id": "9f4c076c-b786-452d-a439-6219f4253006",
+      "type": "voice",
+      "text": "what is our owner name",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-05-01T22:21:06.578Z"
+    },
+    {
+      "id": "dedf603f-0eb5-4a6c-afbd-dfc5c29779b4",
+      "type": "command",
+      "text": "show my tasks",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "stderr": "",
+        "stdout": "",
+        "language": "en-US",
+        "actionName": "show-tasks"
+      },
+      "createdAt": "2026-05-01T22:19:54.431Z"
+    },
+    {
+      "id": "b74a8a91-b98b-45af-9b0f-304e484c76cd",
+      "type": "voice",
+      "text": "show my tasks",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-05-01T22:19:54.427Z"
+    },
+    {
+      "id": "970b674e-a3dd-4b6d-a515-210cadbeac14",
+      "type": "command",
+      "text": "add task call electrician",
+      "success": true,
+      "latencyMs": 1,
+      "metadata": {
+        "stderr": "",
+        "stdout": "",
+        "language": "en-US",
+        "actionName": "add-task"
+      },
+      "createdAt": "2026-05-01T22:19:54.347Z"
+    },
+    {
+      "id": "9160ed07-9568-43bc-aa9b-a439b83dda57",
+      "type": "voice",
+      "text": "add task call electrician",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-05-01T22:19:54.339Z"
+    },
+    {
+      "id": "5c09e83a-1438-4da2-8469-e17bc540fd46",
+      "type": "proactive-follow-up",
+      "text": "I am still here with you. What do you want to do next?",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "user-silence",
+        "language": "en-US"
+      },
+      "createdAt": "2026-04-27T04:20:42.884Z"
+    },
+    {
+      "id": "53f6e9fe-99e8-4618-9d68-793b51e0cb4b",
+      "type": "command",
+      "text": "show my ai brain",
+      "success": true,
+      "latencyMs": 1,
+      "metadata": {
+        "stderr": "",
+        "stdout": "",
+        "language": "en-US",
+        "actionName": "show-brain"
+      },
+      "createdAt": "2026-04-27T04:20:42.818Z"
+    },
+    {
+      "id": "f75e4703-b83a-45d7-8675-d0fd8020da57",
+      "type": "voice",
+      "text": "show my ai brain",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-04-27T04:20:42.812Z"
+    },
+    {
+      "id": "2c7f1439-6209-41b0-8f00-6c7a81151ab6",
+      "type": "conversation",
+      "text": "what is my name",
+      "success": true,
+      "latencyMs": 2,
+      "metadata": {
+        "language": "en-US",
+        "provider": "profile-memory"
+      },
+      "createdAt": "2026-04-27T03:59:20.646Z"
+    },
+    {
+      "id": "58d11905-ce8b-4697-adf3-930513f612bf",
+      "type": "voice",
+      "text": "what is my name",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-04-27T03:59:20.644Z"
+    },
+    {
+      "id": "0421f61a-6983-4171-95d7-71b2af92558e",
+      "type": "conversation",
+      "text": "my name is Nila",
+      "success": true,
+      "latencyMs": 4,
+      "metadata": {
+        "language": "en-US",
+        "provider": "profile-memory"
+      },
+      "createdAt": "2026-04-27T03:59:20.550Z"
+    },
+    {
+      "id": "2d6c0fad-6004-434d-bcb8-af6541ee2f71",
+      "type": "voice",
+      "text": "my name is Nila",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-04-27T03:59:20.546Z"
+    },
+    {
+      "id": "3b39a7bc-babf-46da-95fb-25ed0ef2d8a6",
+      "type": "conversation",
+      "text": "what is my name",
+      "success": true,
+      "latencyMs": 2,
+      "metadata": {
+        "language": "en-US",
+        "provider": "profile-memory"
+      },
+      "createdAt": "2026-04-27T03:54:49.688Z"
+    },
+    {
+      "id": "4568ae12-5c84-45b2-a9d8-f83569f0611f",
+      "type": "voice",
+      "text": "what is my name",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-04-27T03:54:49.686Z"
+    },
+    {
+      "id": "3846c3d3-edff-4cf6-8b5c-e1d419f95981",
+      "type": "conversation",
+      "text": "my name is Arun",
+      "success": true,
+      "latencyMs": 6,
+      "metadata": {
+        "language": "en-US",
+        "provider": "profile-memory"
+      },
+      "createdAt": "2026-04-27T03:54:49.614Z"
+    },
+    {
+      "id": "8442f2bd-d26f-4373-b24e-5aaa879e709b",
+      "type": "voice",
+      "text": "my name is Arun",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-04-27T03:54:49.609Z"
+    },
+    {
+      "id": "2b08e16f-382a-4119-af30-f2fc7b1923d8",
+      "type": "conversation",
+      "text": "hello aura",
+      "success": true,
+      "latencyMs": 35,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-04-25T03:18:37.170Z"
+    },
+    {
+      "id": "372b1712-6e16-42c1-87cf-2948917f6e26",
+      "type": "voice",
+      "text": "hello aura",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-04-25T03:18:37.136Z"
+    },
+    {
+      "id": "eb8303d6-cf4f-4459-b7ef-683fb1b1bc4d",
+      "type": "command",
+      "text": "show ai data",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "stderr": "",
+        "stdout": "",
+        "language": "en-US",
+        "actionName": "show-architecture"
+      },
+      "createdAt": "2026-04-25T03:17:43.813Z"
+    },
+    {
+      "id": "cc3dcd63-016e-4f63-88f6-46745c63c1e4",
+      "type": "voice",
+      "text": "show ai data",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-04-25T03:17:43.809Z"
+    },
+    {
+      "id": "9f5d6ffa-e07d-4623-92aa-de905b71644d",
+      "type": "voice",
+      "text": "hello aura",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-04-25T03:17:39.849Z"
+    }
+  ],
+  "routines": [
+    {
+      "id": "7d31c552-36f3-44e6-923a-a4f0f4c62de4",
+      "actionName": "show-architecture",
+      "frequency": 1,
+      "lastUsedAt": "2026-04-25T03:17:43.814Z",
+      "lastTriggerText": "show ai data"
+    },
+    {
+      "id": "a31a0ad3-38b6-467c-ad3e-1aaaf24f2120",
+      "actionName": "show-brain",
+      "frequency": 1,
+      "lastUsedAt": "2026-04-27T04:20:42.819Z",
+      "lastTriggerText": "show my ai brain"
+    },
+    {
+      "id": "3b7489e8-641e-4c00-a529-1da2718cbe63",
+      "actionName": "add-task",
+      "frequency": 2,
+      "lastUsedAt": "2026-05-01T22:25:04.321Z",
+      "lastTriggerText": "add task buy milk"
+    },
+    {
+      "id": "5c5f76f3-757a-4d80-9e26-5b765c6d93a4",
+      "actionName": "show-tasks",
+      "frequency": 1,
+      "lastUsedAt": "2026-05-01T22:19:54.432Z",
+      "lastTriggerText": "show my tasks"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "b6fcc901-51c4-471e-9c1c-23ed2211db97",
+      "title": "buy milk",
+      "status": "pending",
+      "sourceText": "add task buy milk",
+      "createdAt": "2026-05-01T22:25:04.318Z",
+      "completedAt": null
+    },
+    {
+      "id": "98f0708c-028e-48f0-9738-2727e42d68ba",
+      "title": "call electrician",
+      "status": "pending",
+      "sourceText": "add task call electrician",
+      "createdAt": "2026-05-01T22:19:54.346Z",
+      "completedAt": null
+    }
+  ],
+  "accessRequests": [],
+  "approvedDevices": []
+}
