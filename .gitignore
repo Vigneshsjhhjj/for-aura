@@ -1,4 +1,6 @@
 config.local.json
 node_modules
+data/logs/
+data/*.log
 data/*.backup.json
-data/runtime-logs
+data/runtime-logs/
