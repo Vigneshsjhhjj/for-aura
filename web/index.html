@@ -3,282 +3,186 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SmartMaintain AI</title>
+    <title>AURA Control Room</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <header class="topbar">
+    <div class="page-shell">
+      <header class="hero">
         <div>
-          <p class="eyebrow">MSME factory intelligence</p>
-          <h1>SmartMaintain AI</h1>
+          <p class="eyebrow">Personal AI Control Room</p>
+          <h1>AURA</h1>
+          <p class="hero-copy">
+            Always-on voice assistant starter kit with local memory, browser control,
+            daily learning, and online/offline AI routing.
+          </p>
         </div>
-        <div class="topbar-actions">
-          <div class="factory-meta">
-            <span id="factoryName">Loading factory</span>
-            <strong id="generatedAt">Syncing</strong>
-          </div>
-          <button class="btn btn-secondary" id="refreshButton" type="button">
-            <span class="btn-icon" aria-hidden="true">R</span>
-            Refresh
-          </button>
+        <div class="status-grid">
+          <article class="status-card">
+            <span>Status</span>
+            <strong id="statusText">Booting</strong>
+          </article>
+          <article class="status-card">
+            <span>Mode</span>
+            <strong id="modeText">Online Preferred</strong>
+          </article>
+          <article class="status-card">
+            <span>Latency</span>
+            <strong id="latencyText">0 ms</strong>
+          </article>
         </div>
       </header>
 
-      <main>
-        <section class="kpi-grid" aria-label="Factory health summary">
-          <article class="stat-card">
-            <span>Fleet health</span>
-            <strong id="fleetHealth">--</strong>
-            <small id="fleetHealthHint">Awaiting readings</small>
-          </article>
-          <article class="stat-card">
-            <span>Critical machines</span>
-            <strong id="criticalMachines">--</strong>
-            <small>Needs action before next long run</small>
-          </article>
-          <article class="stat-card">
-            <span>High risk predictions</span>
-            <strong id="highRiskPredictions">--</strong>
-            <small>Failure probability above 60%</small>
-          </article>
-          <article class="stat-card">
-            <span>Downtime avoided</span>
-            <strong id="downtimeAvoided">--</strong>
-            <small>Estimated hours protected this week</small>
-          </article>
+      <main class="dashboard">
+        <section class="panel avatar-panel">
+          <div class="avatar-stage" id="avatarStage">
+            <div class="avatar-core">
+              <div class="avatar-face">
+                <span class="eye"></span>
+                <span class="eye"></span>
+                <span class="mouth"></span>
+              </div>
+            </div>
+            <div class="ring ring-a"></div>
+            <div class="ring ring-b"></div>
+            <div class="ring ring-c"></div>
+          </div>
+
+          <div class="panel-copy">
+            <h2>Voice Loop</h2>
+            <p id="voiceStatus">
+              Browser speech recognition will listen continuously when enabled.
+            </p>
+          </div>
+
+          <div class="stack controls">
+            <button id="listenToggle" class="primary-button">Start Listening</button>
+            <button id="modeToggle" class="secondary-button">Switch To Offline</button>
+            <button id="showArchitecture" class="ghost-button">Show AI Data</button>
+            <button id="showMemory" class="ghost-button">Show Memory</button>
+            <button id="showPerformance" class="ghost-button">Show Performance</button>
+            <button id="showBrain" class="ghost-button">Show Brain</button>
+          </div>
         </section>
 
-        <section class="workbench">
-          <aside class="machine-panel" aria-label="Machine list">
-            <div class="section-head">
-              <div>
-                <h2>Machines</h2>
-                <p>Health, RUL, and failure window</p>
-              </div>
+        <section class="panel transcript-panel">
+          <div class="panel-head">
+            <h2>Conversation</h2>
+            <span class="pill" id="languagePill">en-IN</span>
+          </div>
+
+          <div id="chatLog" class="chat-log"></div>
+
+          <form id="chatForm" class="chat-form">
+            <input
+              id="chatInput"
+              type="text"
+              placeholder="Type here or talk to AURA..."
+              autocomplete="off"
+            />
+            <button type="submit" class="primary-button">Send</button>
+          </form>
+
+          <div class="interim">
+            <span>Live transcript</span>
+            <p id="interimText">Waiting for speech...</p>
+          </div>
+        </section>
+
+        <section class="panel control-panel">
+          <div class="panel-head">
+            <h2>Control Deck</h2>
+            <span class="pill subtle">Owner Only</span>
+          </div>
+
+          <div class="stack">
+            <label class="field">
+              <span>Owner token for mobile / dangerous actions</span>
+              <input id="ownerToken" type="password" placeholder="Enter your token" />
+            </label>
+
+            <label class="field">
+              <span>Preferred language</span>
+              <select id="languageSelect"></select>
+            </label>
+
+            <div class="quick-grid">
+              <button data-command="open chrome and search weather" class="quick-action">
+                Open Chrome Search
+              </button>
+              <button data-command="go to internal storage" class="quick-action">
+                Internal Storage
+              </button>
+              <button data-command="scroll down" class="quick-action">
+                Scroll Down
+              </button>
+              <button data-command="scroll up" class="quick-action">
+                Scroll Up
+              </button>
+              <button data-command="speak with me in tamil" class="quick-action">
+                Tamil Mode
+              </button>
+              <button data-command="lock my computer" class="quick-action">
+                Lock PC
+              </button>
             </div>
-            <div id="machineList" class="machine-list"></div>
-          </aside>
+          </div>
 
-          <section class="workspace-panel">
-            <nav class="tabs" aria-label="SmartMaintain views">
-              <button class="tab-button active" type="button" data-view="overview">Overview</button>
-              <button class="tab-button" type="button" data-view="inspections">Inspections</button>
-              <button class="tab-button" type="button" data-view="knowledge">Knowledge</button>
-              <button class="tab-button" type="button" data-view="workforce">Workforce</button>
-              <button class="tab-button" type="button" data-view="copilot">Copilot</button>
-            </nav>
+          <div class="gesture-box" id="gesturePad">
+            <h3>Mobile Gesture Pad</h3>
+            <p>Swipe up or down here on your phone to scroll reels.</p>
+          </div>
 
-            <section class="view active" id="overviewView">
-              <div class="section-head">
-                <div>
-                  <h2 id="selectedMachineName">Machine overview</h2>
-                  <p id="selectedMachineMeta">Select a machine</p>
-                </div>
-                <button class="btn btn-primary" id="createWorkOrderButton" type="button">
-                  <span class="btn-icon" aria-hidden="true">W</span>
-                  Work order
-                </button>
-              </div>
-              <div id="trendChart" class="chart-shell"></div>
-              <div class="prediction-grid">
-                <div>
-                  <h3>Failure predictions</h3>
-                  <div id="predictionList" class="prediction-list"></div>
-                </div>
-                <div>
-                  <h3>Explainable AI factors</h3>
-                  <ul id="explainabilityList" class="factor-list"></ul>
-                </div>
-              </div>
-            </section>
-
-            <section class="view" id="inspectionsView">
-              <div class="section-head">
-                <div>
-                  <h2>Manual inspection app</h2>
-                  <p>Operators can enter human-sensed machine condition readings.</p>
-                </div>
-              </div>
-              <form id="inspectionForm" class="form-grid">
-                <label>
-                  Machine
-                  <select id="inspectionMachine" name="machineId"></select>
-                </label>
-                <label>
-                  Operator
-                  <input name="operator" type="text" value="Operator A" />
-                </label>
-                <label>
-                  Temperature C
-                  <input name="temperatureC" type="number" step="0.1" required />
-                </label>
-                <label>
-                  Vibration mm/s
-                  <input name="vibrationMmS" type="number" step="0.1" required />
-                </label>
-                <label>
-                  Noise dB
-                  <input name="noiseDb" type="number" step="0.1" required />
-                </label>
-                <label>
-                  Oil quality 0-100
-                  <input name="oilQuality" type="number" min="0" max="100" step="1" required />
-                </label>
-                <label>
-                  Power kW
-                  <input name="powerKw" type="number" step="0.1" required />
-                </label>
-                <label>
-                  Operating hours
-                  <input name="operatingHours" type="number" step="1" value="8" />
-                </label>
-                <label class="full-span">
-                  Notes
-                  <textarea name="note" rows="3" placeholder="Observed sound, smell, oil leak, batch condition"></textarea>
-                </label>
-                <div class="form-actions">
-                  <button class="btn btn-primary" type="submit">
-                    <span class="btn-icon" aria-hidden="true">L</span>
-                    Log inspection
-                  </button>
-                  <span id="inspectionStatus" class="form-status"></span>
-                </div>
-              </form>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Time</th>
-                      <th>Machine</th>
-                      <th>Temp</th>
-                      <th>Vibration</th>
-                      <th>Oil</th>
-                      <th>Operator</th>
-                    </tr>
-                  </thead>
-                  <tbody id="recentInspections"></tbody>
-                </table>
-              </div>
-            </section>
-
-            <section class="view" id="knowledgeView">
-              <div class="section-head">
-                <div>
-                  <h2>Tacit knowledge capture</h2>
-                  <p>Capture senior supervisor judgment and convert it into SOP checklists.</p>
-                </div>
-              </div>
-              <form id="knowledgeForm" class="form-grid">
-                <label>
-                  Machine
-                  <select id="knowledgeMachine" name="machineId"></select>
-                </label>
-                <label>
-                  Supervisor
-                  <input name="supervisor" type="text" value="Senior supervisor" />
-                </label>
-                <label>
-                  Language
-                  <input name="language" type="text" value="English" />
-                </label>
-                <label>
-                  Tags
-                  <input name="tags" type="text" placeholder="startup, monsoon, quality" />
-                </label>
-                <label class="full-span">
-                  Knowledge title
-                  <input name="title" type="text" placeholder="Example: Hydraulic press warm startup" required />
-                </label>
-                <label class="full-span">
-                  Captured expertise
-                  <textarea name="content" rows="4" placeholder="Type the supervisor rule, exception, or operating habit" required></textarea>
-                </label>
-                <div class="form-actions">
-                  <button class="btn btn-primary" type="submit">
-                    <span class="btn-icon" aria-hidden="true">S</span>
-                    Generate SOP
-                  </button>
-                  <span id="knowledgeStatus" class="form-status"></span>
-                </div>
-              </form>
-              <div class="split-list">
-                <div>
-                  <h3>Captured knowledge</h3>
-                  <div id="knowledgeEntries" class="compact-list"></div>
-                </div>
-                <div>
-                  <h3>Generated SOPs</h3>
-                  <div id="sopEntries" class="compact-list"></div>
-                </div>
-              </div>
-            </section>
-
-            <section class="view" id="workforceView">
-              <div class="section-head">
-                <div>
-                  <h2>Worker assignment engine</h2>
-                  <p>Assignments rebalance by skill, availability, and machine health.</p>
-                </div>
-              </div>
-              <div id="workerList" class="worker-grid"></div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Machine</th>
-                      <th>Risk</th>
-                      <th>Assigned worker</th>
-                      <th>Confidence</th>
-                      <th>Reason</th>
-                    </tr>
-                  </thead>
-                  <tbody id="assignmentRows"></tbody>
-                </table>
-              </div>
-            </section>
-
-            <section class="view" id="copilotView">
-              <div class="section-head">
-                <div>
-                  <h2>AI factory copilot</h2>
-                  <p>Ask about maintenance priority, explanations, SOPs, and worker plans.</p>
-                </div>
-              </div>
-              <form id="copilotForm" class="copilot-form">
-                <input id="copilotQuestion" type="text" placeholder="Which machine needs maintenance first?" />
-                <button class="btn btn-primary" type="submit">
-                  <span class="btn-icon" aria-hidden="true">A</span>
-                  Ask
-                </button>
-              </form>
-              <div id="copilotAnswer" class="copilot-answer"></div>
-              <div class="prompt-row">
-                <button type="button" class="prompt-chip" data-question="Which machine needs maintenance first?">Priority</button>
-                <button type="button" class="prompt-chip" data-question="Explain why the riskiest machine is flagged.">Explain risk</button>
-                <button type="button" class="prompt-chip" data-question="Who should be assigned today?">Workers</button>
-                <button type="button" class="prompt-chip" data-question="Show the latest SOP knowledge.">SOPs</button>
-              </div>
-            </section>
-          </section>
-
-          <aside class="insight-panel">
-            <div class="section-head">
-              <div>
-                <h2>Smart alerts</h2>
-                <p>Email, SMS, or WhatsApp ready events</p>
-              </div>
+          <div class="voice-studio">
+            <div class="panel-head">
+              <h2>Voice Studio</h2>
+              <span class="pill subtle">Future Ready</span>
             </div>
-            <div id="alertsList" class="alert-list"></div>
-
-            <div class="section-head compact-head">
-              <div>
-                <h2>Next action</h2>
-                <p>Recommended by prediction engine</p>
-              </div>
+            <label class="field">
+              <span>Voice sample label</span>
+              <input id="voiceLabel" type="text" placeholder="Example: My main voice" />
+            </label>
+            <div class="quick-grid">
+              <button id="recordVoice" class="quick-action">Record Voice</button>
+              <button id="saveVoice" class="quick-action">Save Voice Sample</button>
             </div>
-            <div id="nextAction" class="next-action"></div>
-          </aside>
+            <p id="voiceStudioStatus" class="voice-note">
+              Save your sample here. Browser speech is still used until a custom TTS engine is connected.
+            </p>
+            <div id="voiceProfiles" class="voice-profiles"></div>
+          </div>
+        </section>
+
+        <section class="panel data-panel">
+          <div class="panel-head">
+            <h2>AI Data</h2>
+            <span class="pill subtle">Local First</span>
+          </div>
+          <pre id="architectureData" class="code-block"></pre>
+        </section>
+
+        <section class="panel data-panel">
+          <div class="panel-head">
+            <h2>Memory & Learning</h2>
+            <span class="pill subtle">Editable By You</span>
+          </div>
+          <pre id="memoryData" class="code-block"></pre>
+        </section>
+
+        <section class="panel data-panel">
+          <div class="panel-head">
+            <h2>Performance</h2>
+            <span class="pill subtle">Fast Path</span>
+          </div>
+          <pre id="performanceData" class="code-block"></pre>
+        </section>
+
+        <section class="panel data-panel">
+          <div class="panel-head">
+            <h2>Private Brain</h2>
+            <span class="pill subtle">Owner Only</span>
+          </div>
+          <pre id="brainData" class="code-block"></pre>
         </section>
       </main>
     </div>

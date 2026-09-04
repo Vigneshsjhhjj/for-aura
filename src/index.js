@@ -1,32 +1,48 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadConfig } from "./config/loadConfig.js";
+import { LocalDatabase } from "./services/memory/localDatabase.js";
+import { BehaviorTracker } from "./services/learning/behaviorTracker.js";
+import { PerformanceReporter } from "./services/analytics/performanceReporter.js";
+import { OpenAIClient } from "./services/llm/openaiClient.js";
+import { OllamaClient } from "./services/llm/ollamaClient.js";
+import { SupabaseSync } from "./services/cloud/supabaseSync.js";
+import { AuraEngine } from "./core/auraEngine.js";
 import { createServer } from "./api/server.js";
-import { SmartMaintainStore } from "./services/smartmaintain/store.js";
+import { logInfo, logError } from "./utils/logger.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
 
-const config = {
-  host: process.env.HOST ?? "127.0.0.1",
-  port: Number(process.env.PORT ?? 4545),
-  webRoot: path.join(projectRoot, "web"),
-  dataPath: path.join(projectRoot, "data", "smartmaintain.db.json")
-};
+const config = loadConfig(projectRoot);
+const database = new LocalDatabase(config.storage.localDbPath, config);
+database.init();
 
-const store = new SmartMaintainStore(config.dataPath);
-store.init();
+const behaviorTracker = new BehaviorTracker(database);
+const performanceReporter = new PerformanceReporter(database);
+const openAIClient = new OpenAIClient(config.models.online);
+const ollamaClient = new OllamaClient(config.models.offline);
+const cloudSync = new SupabaseSync(config.storage.cloud);
 
-const server = createServer({
-  webRoot: config.webRoot,
-  store
+const engine = new AuraEngine({
+  config,
+  database,
+  behaviorTracker,
+  performanceReporter,
+  openAIClient,
+  ollamaClient,
+  cloudSync
 });
 
-server.listen(config.port, config.host, () => {
-  console.log(`SmartMaintain AI is running at http://${config.host}:${config.port}`);
+const server = createServer({ config, engine, database });
+
+server.listen(config.server.port, config.server.host, () => {
+  logInfo(
+    `${config.assistantName} is running at http://localhost:${config.server.port}`
+  );
 });
 
 server.on("error", (error) => {
-  console.error("SmartMaintain AI failed to start.", error);
-  process.exitCode = 1;
+  logError("Server failed to start.", error);
 });

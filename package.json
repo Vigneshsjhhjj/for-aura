@@ -1,7 +1,7 @@
 {
-  "name": "smartmaintain-ai",
+  "name": "aura-assistant",
   "version": "1.0.0",
-  "description": "SmartMaintain AI is a local predictive maintenance and workforce intelligence app for MSME factories.",
+  "description": "AURA is a local-first voice assistant starter kit with online and offline AI modes.",
   "type": "module",
   "private": true,
   "scripts": {

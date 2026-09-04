@@ -1,445 +1,661 @@
 const state = {
-  snapshot: null,
-  selectedMachineId: null,
-  activeView: "overview"
+  recognition: null,
+  recognitionActive: false,
+  shouldListen: false,
+  speechSupported: Boolean(window.SpeechRecognition || window.webkitSpeechRecognition),
+  selectedLanguage: "en-IN",
+  ownerToken: "",
+  voices: [],
+  speaking: false,
+  gestureStartY: null,
+  mediaRecorder: null,
+  voiceStream: null,
+  recordedChunks: [],
+  voiceProfiles: [],
+  assistantSettings: null,
+  silenceTimer: null,
+  idlePresenceTimer: null,
+  awaitingReply: false,
+  lastUserActivityAt: 0,
+  startupGreetingDone: false
 };
 
 const ui = {
-  factoryName: document.querySelector("#factoryName"),
-  generatedAt: document.querySelector("#generatedAt"),
-  refreshButton: document.querySelector("#refreshButton"),
-  fleetHealth: document.querySelector("#fleetHealth"),
-  fleetHealthHint: document.querySelector("#fleetHealthHint"),
-  criticalMachines: document.querySelector("#criticalMachines"),
-  highRiskPredictions: document.querySelector("#highRiskPredictions"),
-  downtimeAvoided: document.querySelector("#downtimeAvoided"),
-  machineList: document.querySelector("#machineList"),
-  selectedMachineName: document.querySelector("#selectedMachineName"),
-  selectedMachineMeta: document.querySelector("#selectedMachineMeta"),
-  createWorkOrderButton: document.querySelector("#createWorkOrderButton"),
-  trendChart: document.querySelector("#trendChart"),
-  predictionList: document.querySelector("#predictionList"),
-  explainabilityList: document.querySelector("#explainabilityList"),
-  inspectionForm: document.querySelector("#inspectionForm"),
-  inspectionMachine: document.querySelector("#inspectionMachine"),
-  inspectionStatus: document.querySelector("#inspectionStatus"),
-  recentInspections: document.querySelector("#recentInspections"),
-  knowledgeForm: document.querySelector("#knowledgeForm"),
-  knowledgeMachine: document.querySelector("#knowledgeMachine"),
-  knowledgeStatus: document.querySelector("#knowledgeStatus"),
-  knowledgeEntries: document.querySelector("#knowledgeEntries"),
-  sopEntries: document.querySelector("#sopEntries"),
-  workerList: document.querySelector("#workerList"),
-  assignmentRows: document.querySelector("#assignmentRows"),
-  copilotForm: document.querySelector("#copilotForm"),
-  copilotQuestion: document.querySelector("#copilotQuestion"),
-  copilotAnswer: document.querySelector("#copilotAnswer"),
-  alertsList: document.querySelector("#alertsList"),
-  nextAction: document.querySelector("#nextAction")
+  statusText: document.querySelector("#statusText"),
+  modeText: document.querySelector("#modeText"),
+  latencyText: document.querySelector("#latencyText"),
+  voiceStatus: document.querySelector("#voiceStatus"),
+  languagePill: document.querySelector("#languagePill"),
+  chatLog: document.querySelector("#chatLog"),
+  chatForm: document.querySelector("#chatForm"),
+  chatInput: document.querySelector("#chatInput"),
+  interimText: document.querySelector("#interimText"),
+  listenToggle: document.querySelector("#listenToggle"),
+  modeToggle: document.querySelector("#modeToggle"),
+  showArchitecture: document.querySelector("#showArchitecture"),
+  showMemory: document.querySelector("#showMemory"),
+  showPerformance: document.querySelector("#showPerformance"),
+  showBrain: document.querySelector("#showBrain"),
+  languageSelect: document.querySelector("#languageSelect"),
+  ownerToken: document.querySelector("#ownerToken"),
+  architectureData: document.querySelector("#architectureData"),
+  memoryData: document.querySelector("#memoryData"),
+  performanceData: document.querySelector("#performanceData"),
+  brainData: document.querySelector("#brainData"),
+  avatarStage: document.querySelector("#avatarStage"),
+  gesturePad: document.querySelector("#gesturePad"),
+  voiceLabel: document.querySelector("#voiceLabel"),
+  recordVoice: document.querySelector("#recordVoice"),
+  saveVoice: document.querySelector("#saveVoice"),
+  voiceProfiles: document.querySelector("#voiceProfiles"),
+  voiceStudioStatus: document.querySelector("#voiceStudioStatus")
 };
 
 boot().catch((error) => {
-  document.body.innerHTML = `<main class="fatal-error">SmartMaintain AI could not start: ${escapeHtml(error.message)}</main>`;
+  appendMessage("assistant", `Boot error: ${error.message}`);
 });
 
-function boot() {
-  bindEvents();
-  return refreshSnapshot();
+async function boot() {
+  bindUi();
+  await Promise.allSettled([
+    loadLanguages(),
+    refreshArchitecture(),
+    refreshMemory(),
+    refreshPerformance(),
+    refreshVoiceProfiles(),
+    refreshBrain(),
+    refreshState()
+  ]);
+  connectEventStream();
+  hydrateVoices();
+  initializeSpeechRecognition();
+  await attemptAutoStartListening();
+  await attemptStartupGreeting();
+  scheduleIdlePresencePrompt();
 }
 
-function bindEvents() {
-  ui.refreshButton.addEventListener("click", refreshSnapshot);
-
-  document.querySelectorAll(".tab-button").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.activeView = button.dataset.view;
-      document.querySelectorAll(".tab-button").forEach((item) => item.classList.toggle("active", item === button));
-      document.querySelectorAll(".view").forEach((view) => {
-        view.classList.toggle("active", view.id === `${state.activeView}View`);
-      });
-    });
-  });
-
-  ui.inspectionForm.addEventListener("submit", async (event) => {
+function bindUi() {
+  ui.chatForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    ui.inspectionStatus.textContent = "Saving inspection...";
-    const payload = Object.fromEntries(new FormData(ui.inspectionForm).entries());
-    const result = await postJson("/api/inspections", payload);
-    state.snapshot = result.snapshot;
-    state.selectedMachineId = payload.machineId;
-    ui.inspectionStatus.textContent = "Inspection logged and prediction refreshed.";
-    render();
-  });
-
-  ui.knowledgeForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    ui.knowledgeStatus.textContent = "Generating SOP...";
-    const payload = Object.fromEntries(new FormData(ui.knowledgeForm).entries());
-    const result = await postJson("/api/knowledge", payload);
-    state.snapshot = result.snapshot;
-    ui.knowledgeStatus.textContent = "Knowledge captured and SOP generated.";
-    ui.knowledgeForm.reset();
-    render();
-  });
-
-  ui.createWorkOrderButton.addEventListener("click", async () => {
-    const machine = getSelectedMachine();
-    if (!machine) {
+    const text = ui.chatInput.value.trim();
+    if (!text) {
       return;
     }
-    const prediction = machine.analysis.predictions[0];
-    const result = await postJson("/api/work-orders", {
-      machineId: machine.id,
-      priority: machine.analysis.riskLevel === "critical" ? "critical" : "high",
-      title: `${prediction.component} inspection for ${machine.name}`
-    });
-    state.snapshot = result.snapshot;
-    render();
+
+    ui.chatInput.value = "";
+    noteUserActivity();
+    await talkToAura(text, "text");
   });
 
-  ui.copilotForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const question = ui.copilotQuestion.value.trim();
-    if (!question) {
+  ui.listenToggle.addEventListener("click", async () => {
+    if (!state.speechSupported) {
+      ui.voiceStatus.textContent =
+        "This browser does not support SpeechRecognition. Use Chrome or Edge.";
       return;
     }
-    await askCopilot(question);
+
+    if (state.shouldListen) {
+      stopListening();
+      await updatePreferences({ alwaysListen: false });
+      return;
+    }
+
+    state.shouldListen = true;
+    await updatePreferences({ alwaysListen: true });
+    startListening();
   });
 
-  document.querySelectorAll("[data-question]").forEach((button) => {
+  ui.modeToggle.addEventListener("click", async () => {
+    const nextMode = ui.modeToggle.dataset.onlinePreferred !== "false";
+    await postJson("/api/runtime", { onlinePreferred: !nextMode });
+  });
+
+  ui.showArchitecture.addEventListener("click", refreshArchitecture);
+  ui.showMemory.addEventListener("click", refreshMemory);
+  ui.showPerformance.addEventListener("click", refreshPerformance);
+  ui.showBrain.addEventListener("click", refreshBrain);
+
+  ui.ownerToken.addEventListener("input", (event) => {
+    state.ownerToken = event.target.value.trim();
+    if (state.ownerToken) {
+      refreshPrivatePanels();
+    }
+  });
+
+  ui.languageSelect.addEventListener("change", async (event) => {
+    const languageId = event.target.value;
+    state.selectedLanguage = languageId;
+    await updatePreferences({
+      inputLanguage: languageId,
+      replyLanguage: languageId
+    });
+    if (state.recognition) {
+      state.recognition.lang = languageId === "ta-IN-x-tanglish" ? "ta-IN" : languageId;
+    }
+  });
+
+  document.querySelectorAll("[data-command]").forEach((button) => {
     button.addEventListener("click", async () => {
-      ui.copilotQuestion.value = button.dataset.question;
-      await askCopilot(button.dataset.question);
+      await talkToAura(button.dataset.command, "button");
     });
   });
-}
 
-async function refreshSnapshot() {
-  const snapshot = await fetchJson("/api/snapshot");
-  state.snapshot = snapshot;
-  if (!state.selectedMachineId || !snapshot.machines.some((machine) => machine.id === state.selectedMachineId)) {
-    state.selectedMachineId = [...snapshot.machines].sort((a, b) => a.analysis.healthScore - b.analysis.healthScore)[0]?.id;
-  }
-  render();
-}
-
-function render() {
-  renderHeader();
-  renderSummary();
-  renderMachineList();
-  renderSelectors();
-  renderOverview();
-  renderInspections();
-  renderKnowledge();
-  renderWorkforce();
-  renderAlerts();
-}
-
-function renderHeader() {
-  ui.factoryName.textContent = state.snapshot.factory.name;
-  ui.generatedAt.textContent = `Updated ${formatDateTime(state.snapshot.generatedAt)}`;
-}
-
-function renderSummary() {
-  const summary = state.snapshot.summary;
-  ui.fleetHealth.textContent = `${summary.averageHealth}/100`;
-  ui.fleetHealthHint.textContent = `${summary.stableMachines} stable, ${summary.watchMachines} watch`;
-  ui.criticalMachines.textContent = summary.criticalMachines;
-  ui.highRiskPredictions.textContent = summary.highRiskPredictions;
-  ui.downtimeAvoided.textContent = `${summary.downtimeAvoidedHours} h`;
-}
-
-function renderMachineList() {
-  ui.machineList.innerHTML = state.snapshot.machines
-    .sort((a, b) => a.analysis.healthScore - b.analysis.healthScore)
-    .map((machine) => {
-      const analysis = machine.analysis;
-      return `
-        <button class="machine-row ${machine.id === state.selectedMachineId ? "active" : ""}" type="button" data-machine-id="${machine.id}">
-          <span class="machine-main">
-            <strong>${escapeHtml(machine.name)}</strong>
-            <small>${escapeHtml(machine.cell)} - ${escapeHtml(machine.type)}</small>
-          </span>
-          <span class="health-meter" aria-label="Health ${analysis.healthScore} out of 100">
-            <span style="width: ${analysis.healthScore}%"></span>
-          </span>
-          <span class="risk-pill ${analysis.riskLevel}">${analysis.riskLevel}</span>
-          <span class="rul">${analysis.remainingUsefulLife}</span>
-        </button>
-      `;
-    })
-    .join("");
-
-  ui.machineList.querySelectorAll("[data-machine-id]").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.selectedMachineId = button.dataset.machineId;
-      render();
-    });
+  ui.gesturePad.addEventListener("touchstart", (event) => {
+    state.gestureStartY = event.touches[0]?.clientY ?? null;
+    ui.gesturePad.classList.add("active");
   });
+
+  ui.gesturePad.addEventListener("touchend", async (event) => {
+    const endY = event.changedTouches[0]?.clientY ?? null;
+    if (state.gestureStartY !== null && endY !== null) {
+      const delta = endY - state.gestureStartY;
+      if (Math.abs(delta) > 30) {
+        await talkToAura(delta > 0 ? "scroll down" : "scroll up", "gesture");
+      }
+    }
+    state.gestureStartY = null;
+    ui.gesturePad.classList.remove("active");
+  });
+
+  ui.recordVoice.addEventListener("click", toggleVoiceRecording);
+  ui.saveVoice.addEventListener("click", saveVoiceSample);
 }
 
-function renderSelectors() {
-  const options = state.snapshot.machines
-    .map((machine) => `<option value="${machine.id}">${escapeHtml(machine.name)}</option>`)
-    .join("");
-  ui.inspectionMachine.innerHTML = options;
-  ui.knowledgeMachine.innerHTML = options;
-  ui.inspectionMachine.value = state.selectedMachineId;
-  ui.knowledgeMachine.value = state.selectedMachineId;
+async function refreshState() {
+  const data = await fetchJson("/api/state");
+  renderState(data);
+}
 
-  const machine = getSelectedMachine();
-  if (machine) {
-    const latest = machine.analysis.latestReading;
-    ui.inspectionForm.elements.temperatureC.value = latest.temperatureC;
-    ui.inspectionForm.elements.vibrationMmS.value = latest.vibrationMmS;
-    ui.inspectionForm.elements.noiseDb.value = latest.noiseDb;
-    ui.inspectionForm.elements.oilQuality.value = latest.oilQuality;
-    ui.inspectionForm.elements.powerKw.value = latest.powerKw;
+async function refreshArchitecture() {
+  await runPrivateRefresh(ui.architectureData, "/api/architecture");
+}
+
+async function refreshMemory() {
+  await runPrivateRefresh(ui.memoryData, "/api/memory");
+}
+
+async function refreshPerformance() {
+  await runPrivateRefresh(ui.performanceData, "/api/performance");
+}
+
+async function refreshVoiceProfiles() {
+  try {
+    const data = await fetchJson("/api/voice-profiles");
+    state.voiceProfiles = data.items ?? [];
+    renderVoiceProfiles(data);
+  } catch (error) {
+    state.voiceProfiles = [];
+    ui.voiceProfiles.innerHTML =
+      "<p class='voice-note'>Enter your owner token to view saved voice profiles from another device.</p>";
   }
 }
 
-function renderOverview() {
-  const machine = getSelectedMachine();
-  if (!machine) {
+async function refreshBrain() {
+  try {
+    const data = await fetchJson("/api/brain");
+    ui.brainData.textContent = JSON.stringify(data, null, 2);
+    ui.showBrain.classList.add("active-brain");
+  } catch (error) {
+    ui.brainData.textContent =
+      "Private brain view is protected. Open locally on your laptop or enter your owner token.";
+    ui.showBrain.classList.remove("active-brain");
+  }
+}
+
+async function loadLanguages() {
+  const payload = await fetchJson("/api/languages");
+  const fragment = document.createDocumentFragment();
+
+  payload.languages.forEach((language) => {
+    const option = document.createElement("option");
+    option.value = language.id;
+    option.textContent = language.label;
+    fragment.appendChild(option);
+  });
+
+  ui.languageSelect.innerHTML = "";
+  ui.languageSelect.appendChild(fragment);
+}
+
+function connectEventStream() {
+  const events = new EventSource("/api/events");
+  events.onmessage = async (event) => {
+    const payload = JSON.parse(event.data);
+    renderState(payload);
+    ui.memoryData.textContent = JSON.stringify(
+      {
+        preferences: payload.preferences,
+        learning: payload.learning
+      },
+      null,
+      2
+    );
+    ui.performanceData.textContent = JSON.stringify(payload.performance, null, 2);
+    renderVoiceProfiles(payload.voiceProfiles);
+  };
+}
+
+function renderState(payload) {
+  const publicState = payload.state;
+  state.selectedLanguage = publicState.inputLanguage;
+  state.assistantSettings = payload.assistantSettings ?? null;
+  state.shouldListen = Boolean(publicState.listening);
+  state.awaitingReply = Boolean(publicState.awaitingReply);
+
+  ui.statusText.textContent = publicState.listening ? "Listening" : "Idle";
+  ui.modeText.textContent = publicState.onlinePreferred
+    ? "Online Preferred"
+    : "Offline Preferred";
+  ui.modeToggle.dataset.onlinePreferred = String(publicState.onlinePreferred);
+  ui.modeToggle.textContent = publicState.onlinePreferred
+    ? "Switch To Offline"
+    : "Switch To Online";
+  ui.latencyText.textContent = `${publicState.lastLatencyMs ?? 0} ms`;
+  ui.languagePill.textContent = publicState.replyLanguage;
+  ui.languageSelect.value = publicState.replyLanguage;
+  ui.listenToggle.textContent = publicState.listening ? "Stop Listening" : "Start Listening";
+  ui.voiceStatus.textContent = publicState.speaking
+    ? "AURA is speaking."
+    : publicState.listening
+      ? "AURA is actively listening with no wake word."
+      : "Listening is paused.";
+  ui.avatarStage.classList.toggle("listening", Boolean(publicState.listening));
+  ui.avatarStage.classList.toggle("speaking", Boolean(publicState.speaking));
+}
+
+async function talkToAura(text, source) {
+  appendMessage("user", text);
+  clearSilenceFollowUp();
+  clearIdlePresencePrompt();
+  ui.interimText.textContent = "Sending to AURA...";
+  const payload = await postJson("/api/talk", { text, source });
+  appendMessage("assistant", payload.replyText);
+
+  if (payload.data) {
+    const json = JSON.stringify(payload.data, null, 2);
+    if (payload.action === "show-architecture") {
+      ui.architectureData.textContent = json;
+    }
+    if (payload.action === "show-memory") {
+      ui.memoryData.textContent = json;
+    }
+    if (payload.action === "show-brain" || payload.action === "show-default-commands" || payload.action === "show-manual-responses") {
+      ui.brainData.textContent = json;
+    }
+    if (payload.action === "show-performance") {
+      ui.performanceData.textContent = json;
+    }
+  }
+
+  ui.interimText.textContent = "Waiting for speech...";
+  await refreshMemory();
+  await refreshPerformance();
+  await refreshVoiceProfiles();
+  await refreshBrain();
+  await speak(payload.replyText);
+  scheduleSilenceFollowUp(payload.conversationState);
+  scheduleIdlePresencePrompt();
+}
+
+function appendMessage(role, text) {
+  const article = document.createElement("article");
+  article.className = `message ${role}`;
+  article.innerHTML = `<small>${role === "user" ? "You" : "AURA"}</small>${escapeHtml(text)}`;
+  ui.chatLog.prepend(article);
+}
+
+function hydrateVoices() {
+  const loadVoices = () => {
+    state.voices = window.speechSynthesis.getVoices();
+  };
+
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function renderVoiceProfiles(payload) {
+  const items = payload?.items ?? [];
+  const activeVoiceProfileId = payload?.activeVoiceProfileId ?? null;
+  ui.voiceProfiles.innerHTML = "";
+
+  if (items.length === 0) {
+    ui.voiceProfiles.innerHTML =
+      "<p class='voice-note'>No stored custom voice sample yet. Record one below.</p>";
     return;
   }
 
-  const analysis = machine.analysis;
-  ui.selectedMachineName.textContent = machine.name;
-  ui.selectedMachineMeta.textContent = `${machine.cell} - ${machine.type} - ${analysis.healthScore}/100 health - ${analysis.remainingUsefulLife} RUL`;
-  ui.trendChart.innerHTML = buildTrendChart(machine);
-  ui.predictionList.innerHTML = analysis.predictions
-    .map(
-      (prediction) => `
-        <article class="prediction-card">
-          <div>
-            <strong>${escapeHtml(prediction.component)}</strong>
-            <small>${escapeHtml(prediction.driver)}</small>
-          </div>
-          <div class="prediction-score">
-            <span>${prediction.probabilityPercent}%</span>
-            <small>${escapeHtml(prediction.timeframe)}</small>
-          </div>
-        </article>
-      `
-    )
-    .join("");
+  items.forEach((voiceProfile) => {
+    const article = document.createElement("article");
+    article.className = "voice-profile";
+    const isActive = voiceProfile.id === activeVoiceProfileId;
+    article.innerHTML = `
+      <strong>${escapeHtml(voiceProfile.label)}</strong>
+      <span>${escapeHtml(voiceProfile.fileName)}</span>
+      <span>${isActive ? "Active sample" : "Stored sample"}</span>
+    `;
 
-  ui.explainabilityList.innerHTML = analysis.explainability
-    .map((factor) => `<li>${escapeHtml(factor)}</li>`)
-    .join("");
+    if (!isActive) {
+      const button = document.createElement("button");
+      button.className = "quick-action";
+      button.textContent = "Use This Voice Sample";
+      button.addEventListener("click", async () => {
+        await postJson("/api/voice-profiles/activate", {
+          voiceProfileId: voiceProfile.id
+        });
+        ui.voiceStudioStatus.textContent =
+          "Voice sample changed. Browser speech is still active unless you connect custom TTS.";
+        await refreshVoiceProfiles();
+      });
+      article.appendChild(button);
+    }
 
-  ui.nextAction.innerHTML = `
-    <strong>${escapeHtml(machine.name)}</strong>
-    <p>${escapeHtml(analysis.recommendation)}</p>
-    <span class="risk-pill ${analysis.riskLevel}">${analysis.riskLevel}</span>
-  `;
+    ui.voiceProfiles.appendChild(article);
+  });
 }
 
-function buildTrendChart(machine) {
-  const inspections = state.snapshot.inspections
-    .filter((inspection) => inspection.machineId === machine.id)
-    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
-    .slice(-8);
-
-  if (inspections.length < 2) {
-    return "<p class='empty-state'>Add two inspections to draw a trend.</p>";
+async function attemptAutoStartListening() {
+  if (!state.speechSupported || !state.assistantSettings?.modes?.autoStartListeningOnLoad) {
+    return;
   }
 
-  const width = 760;
-  const height = 300;
-  const left = 54;
-  const right = 28;
-  const top = 24;
-  const bottom = 46;
-  const plotWidth = width - left - right;
-  const plotHeight = height - top - bottom;
-  const tempMax = Math.max(machine.limits.temperatureC, ...inspections.map((item) => item.temperatureC));
-  const vibrationMax = Math.max(machine.limits.vibrationMmS, ...inspections.map((item) => item.vibrationMmS));
+  if (!state.assistantSettings.modes.alwaysListen) {
+    return;
+  }
 
-  const x = (index) => left + (plotWidth * index) / Math.max(1, inspections.length - 1);
-  const yTemp = (value) => top + plotHeight - (value / tempMax) * plotHeight;
-  const yVibration = (value) => top + plotHeight - (value / vibrationMax) * plotHeight;
-  const pathFor = (field, yScale) =>
-    inspections.map((item, index) => `${index === 0 ? "M" : "L"} ${x(index)} ${yScale(item[field])}`).join(" ");
-  const tempPath = pathFor("temperatureC", yTemp);
-  const vibrationPath = pathFor("vibrationMmS", yVibration);
-  const grid = [0, 0.25, 0.5, 0.75, 1]
-    .map((ratio) => {
-      const yValue = top + plotHeight * ratio;
-      return `<line x1="${left}" y1="${yValue}" x2="${width - right}" y2="${yValue}" class="grid-line" />`;
-    })
-    .join("");
-  const points = inspections
-    .map(
-      (item, index) => `
-        <circle cx="${x(index)}" cy="${yTemp(item.temperatureC)}" r="4" class="temp-point">
-          <title>${formatDate(item.timestamp)} temp ${item.temperatureC} C</title>
-        </circle>
-        <circle cx="${x(index)}" cy="${yVibration(item.vibrationMmS)}" r="4" class="vibration-point">
-          <title>${formatDate(item.timestamp)} vibration ${item.vibrationMmS} mm/s</title>
-        </circle>
-      `
-    )
-    .join("");
-  const xLabels = inspections
-    .map((item, index) => `<text x="${x(index)}" y="${height - 16}" text-anchor="middle">${formatShortDate(item.timestamp)}</text>`)
-    .join("");
-
-  return `
-    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(machine.name)} temperature and vibration trend">
-      <rect x="${left}" y="${top}" width="${plotWidth}" height="${plotHeight}" class="plot-bg" />
-      ${grid}
-      <line x1="${left}" y1="${top}" x2="${left}" y2="${height - bottom}" class="axis" />
-      <line x1="${left}" y1="${height - bottom}" x2="${width - right}" y2="${height - bottom}" class="axis" />
-      <path d="${tempPath}" class="temp-line" />
-      <path d="${vibrationPath}" class="vibration-line" />
-      ${points}
-      ${xLabels}
-      <text x="${left}" y="18" class="axis-title">Temperature C</text>
-      <text x="${width - right}" y="18" text-anchor="end" class="axis-title">Vibration mm/s</text>
-      <g class="legend">
-        <rect x="${left}" y="${height - 38}" width="10" height="10" class="temp-swatch" />
-        <text x="${left + 16}" y="${height - 29}">Temperature</text>
-        <rect x="${left + 124}" y="${height - 38}" width="10" height="10" class="vibration-swatch" />
-        <text x="${left + 140}" y="${height - 29}">Vibration</text>
-      </g>
-    </svg>
-  `;
+  try {
+    startListening();
+  } catch (error) {
+    ui.voiceStatus.textContent =
+      "Auto-start is ready, but this browser wants one click before microphone listening begins.";
+  }
 }
 
-function renderInspections() {
-  ui.recentInspections.innerHTML = state.snapshot.recentInspections
-    .map((inspection) => {
-      const machine = state.snapshot.machines.find((item) => item.id === inspection.machineId);
-      return `
-        <tr>
-          <td>${formatDateTime(inspection.timestamp)}</td>
-          <td>${escapeHtml(machine?.name ?? inspection.machineId)}</td>
-          <td>${inspection.temperatureC} C</td>
-          <td>${inspection.vibrationMmS} mm/s</td>
-          <td>${inspection.oilQuality}</td>
-          <td>${escapeHtml(inspection.operator)}</td>
-        </tr>
-      `;
-    })
-    .join("");
-}
+async function attemptStartupGreeting() {
+  if (!state.assistantSettings?.modes?.startupGreetingEnabled) {
+    return;
+  }
 
-function renderKnowledge() {
-  ui.knowledgeEntries.innerHTML = state.snapshot.knowledgeEntries
-    .slice(0, 8)
-    .map((entry) => {
-      const machine = state.snapshot.machines.find((item) => item.id === entry.machineId);
-      return `
-        <article class="compact-card">
-          <strong>${escapeHtml(entry.title)}</strong>
-          <span>${escapeHtml(entry.supervisor)} - ${escapeHtml(entry.language)}</span>
-          <p>${escapeHtml(entry.content)}</p>
-          <small>${escapeHtml(machine?.name ?? "Factory-wide")} - ${formatDate(entry.createdAt)}</small>
-        </article>
-      `;
-    })
-    .join("");
+  if (sessionStorage.getItem("aura-startup-greeting") === "done") {
+    return;
+  }
 
-  ui.sopEntries.innerHTML = state.snapshot.sops
-    .slice(0, 8)
-    .map(
-      (sop) => `
-        <article class="compact-card">
-          <strong>${escapeHtml(sop.title)}</strong>
-          <ol>${sop.checklist.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>
-        </article>
-      `
-    )
-    .join("");
-}
-
-function renderWorkforce() {
-  ui.workerList.innerHTML = state.snapshot.workers
-    .map(
-      (worker) => `
-        <label class="worker-card">
-          <input type="checkbox" data-worker-id="${worker.id}" ${worker.absent ? "checked" : ""} />
-          <span>
-            <strong>${escapeHtml(worker.name)}</strong>
-            <small>${escapeHtml(worker.skills.join(", "))} - ${worker.shift}</small>
-          </span>
-          <em>${worker.absent ? "Absent" : "Available"}</em>
-        </label>
-      `
-    )
-    .join("");
-
-  ui.workerList.querySelectorAll("[data-worker-id]").forEach((input) => {
-    input.addEventListener("change", async () => {
-      const result = await postJson("/api/workforce/absence", {
-        workerId: input.dataset.workerId,
-        absent: input.checked
-      });
-      state.snapshot = result.snapshot;
-      renderWorkforce();
+  try {
+    const payload = await postJson("/api/presence-prompt", {
+      reason: "startup-greeting"
     });
-  });
-
-  ui.assignmentRows.innerHTML = state.snapshot.assignments
-    .map(
-      (assignment) => `
-        <tr>
-          <td>${escapeHtml(assignment.machineName)}</td>
-          <td><span class="risk-pill ${assignment.riskLevel}">${assignment.riskLevel}</span></td>
-          <td>${escapeHtml(assignment.workerName)}</td>
-          <td>${assignment.confidence}%</td>
-          <td>${escapeHtml(assignment.reason)}</td>
-        </tr>
-      `
-    )
-    .join("");
+    appendMessage("assistant", payload.replyText);
+    await refreshMemory();
+    await refreshBrain();
+    await speak(payload.replyText);
+    sessionStorage.setItem("aura-startup-greeting", "done");
+    state.startupGreetingDone = true;
+  } catch (error) {
+    ui.voiceStatus.textContent = `Startup greeting error: ${error.message}`;
+  }
 }
 
-function renderAlerts() {
-  ui.alertsList.innerHTML = state.snapshot.alerts.length
-    ? state.snapshot.alerts
-        .map(
-          (alert) => `
-            <article class="alert-item ${alert.severity}" data-alert-machine="${alert.machineId}">
-              <strong>${escapeHtml(alert.title)}</strong>
-              <p>${escapeHtml(alert.message)}</p>
-            </article>
-          `
-        )
-        .join("")
-    : "<p class='empty-state'>No critical alerts. Keep logging inspections.</p>";
+function initializeSpeechRecognition() {
+  if (!state.speechSupported) {
+    ui.voiceStatus.textContent =
+      "SpeechRecognition is not available here. Use Chrome or Edge for no-wake voice mode.";
+    return;
+  }
 
-  ui.alertsList.querySelectorAll("[data-alert-machine]").forEach((item) => {
-    item.addEventListener("click", () => {
-      state.selectedMachineId = item.dataset.alertMachine;
-      render();
-    });
-  });
-}
+  const RecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new RecognitionClass();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = state.selectedLanguage === "ta-IN-x-tanglish" ? "ta-IN" : state.selectedLanguage;
 
-async function askCopilot(question) {
-  ui.copilotAnswer.innerHTML = "<p>Thinking through latest maintenance data...</p>";
-  const result = await postJson("/api/copilot", { question });
-  ui.copilotAnswer.innerHTML = `
-    <strong>${escapeHtml(result.answer)}</strong>
-    ${
-      result.sources?.length
-        ? `<ul>${result.sources.map((source) => `<li>${escapeHtml(source)}</li>`).join("")}</ul>`
-        : ""
+  recognition.onresult = async (event) => {
+    let interimText = "";
+    for (let index = event.resultIndex; index < event.results.length; index += 1) {
+      const result = event.results[index];
+      const transcript = result[0]?.transcript?.trim() ?? "";
+      if (!transcript) {
+        continue;
+      }
+
+      if (result.isFinal) {
+        noteUserActivity();
+        ui.interimText.textContent = transcript;
+        await talkToAura(transcript, "voice");
+      } else {
+        interimText = transcript;
+      }
     }
-  `;
+
+    if (interimText) {
+      ui.interimText.textContent = interimText;
+    }
+  };
+
+  recognition.onerror = (event) => {
+    ui.voiceStatus.textContent = `Voice error: ${event.error}`;
+  };
+
+  recognition.onend = () => {
+    state.recognitionActive = false;
+    if (state.shouldListen && !state.speaking) {
+      window.setTimeout(() => {
+        startListening();
+      }, 250);
+    }
+  };
+
+  state.recognition = recognition;
 }
 
-function getSelectedMachine() {
-  return state.snapshot?.machines.find((machine) => machine.id === state.selectedMachineId) ?? null;
+function startListening() {
+  if (!state.recognition || state.recognitionActive) {
+    return;
+  }
+
+  state.shouldListen = true;
+  state.recognition.lang = state.selectedLanguage === "ta-IN-x-tanglish" ? "ta-IN" : state.selectedLanguage;
+  try {
+    state.recognition.start();
+    state.recognitionActive = true;
+  } catch (error) {
+    ui.voiceStatus.textContent =
+      "Microphone start was blocked by the browser. Click Start Listening once and AURA will stay wake-word free after that.";
+  }
+}
+
+function stopListening() {
+  if (state.recognition && state.recognitionActive) {
+    state.recognition.stop();
+  }
+  state.recognitionActive = false;
+}
+
+async function speak(text) {
+  if (!("speechSynthesis" in window) || !text) {
+    return;
+  }
+
+  state.speaking = true;
+  stopListening();
+  await postJson("/api/runtime", { speaking: true });
+
+  await new Promise((resolve) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = state.selectedLanguage === "ta-IN-x-tanglish" ? "ta-IN" : state.selectedLanguage;
+    utterance.rate = state.assistantSettings?.voices?.rate ?? 1;
+    utterance.pitch = state.assistantSettings?.voices?.pitch ?? 1;
+    utterance.volume = state.assistantSettings?.voices?.volume ?? 1;
+
+    const preferredNames = state.assistantSettings?.voices?.preferredVoiceNames ?? [];
+    const matchingVoice =
+      state.voices.find((voice) => preferredNames.includes(voice.name)) ??
+      state.voices.find((voice) => voice.lang === utterance.lang) ??
+      state.voices.find((voice) => voice.lang.startsWith(utterance.lang.split("-")[0])) ??
+      null;
+
+    if (matchingVoice) {
+      utterance.voice = matchingVoice;
+    }
+
+    utterance.onend = resolve;
+    utterance.onerror = resolve;
+    window.speechSynthesis.speak(utterance);
+  });
+
+  state.speaking = false;
+  await postJson("/api/runtime", { speaking: false });
+  if (state.shouldListen) {
+    startListening();
+  }
+}
+
+function scheduleSilenceFollowUp(conversationState) {
+  clearSilenceFollowUp();
+
+  if (!conversationState?.allowSilenceFollowUp) {
+    state.awaitingReply = false;
+    return;
+  }
+
+  state.awaitingReply = true;
+  const delayMs =
+    conversationState.followUpDelayMs ??
+    state.assistantSettings?.modes?.proactiveFollowUpMs ??
+    16000;
+
+  state.silenceTimer = window.setTimeout(async () => {
+    if (!state.awaitingReply) {
+      return;
+    }
+
+    const silenceMs = Date.now() - state.lastUserActivityAt;
+    if (silenceMs < delayMs - 500) {
+      return;
+    }
+
+    try {
+      const payload = await postJson("/api/proactive-follow-up", {});
+      appendMessage("assistant", payload.replyText);
+      await refreshMemory();
+      await refreshPerformance();
+      await refreshBrain();
+      await speak(payload.replyText);
+    } catch (error) {
+      ui.voiceStatus.textContent = `Follow-up error: ${error.message}`;
+    } finally {
+      state.awaitingReply = false;
+      clearSilenceFollowUp();
+    }
+  }, delayMs);
+}
+
+function clearSilenceFollowUp() {
+  if (state.silenceTimer) {
+    window.clearTimeout(state.silenceTimer);
+    state.silenceTimer = null;
+  }
+}
+
+function scheduleIdlePresencePrompt() {
+  clearIdlePresencePrompt();
+
+  if (!state.assistantSettings?.modes?.idlePresenceEnabled) {
+    return;
+  }
+
+  const idleMs = state.assistantSettings.modes.idlePresenceMs ?? 300000;
+  state.idlePresenceTimer = window.setTimeout(async () => {
+    try {
+      const payload = await postJson("/api/presence-prompt", {
+        reason: "idle-help"
+      });
+      appendMessage("assistant", payload.replyText);
+      await refreshMemory();
+      await refreshBrain();
+      await speak(payload.replyText);
+    } catch (error) {
+      ui.voiceStatus.textContent = `Idle prompt error: ${error.message}`;
+    } finally {
+      clearIdlePresencePrompt();
+    }
+  }, idleMs);
+}
+
+function clearIdlePresencePrompt() {
+  if (state.idlePresenceTimer) {
+    window.clearTimeout(state.idlePresenceTimer);
+    state.idlePresenceTimer = null;
+  }
+}
+
+function noteUserActivity() {
+  state.lastUserActivityAt = Date.now();
+  state.awaitingReply = false;
+  clearSilenceFollowUp();
+  clearIdlePresencePrompt();
+}
+
+async function toggleVoiceRecording() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    ui.voiceStudioStatus.textContent =
+      "This browser does not support voice recording here.";
+    return;
+  }
+
+  if (state.mediaRecorder && state.mediaRecorder.state === "recording") {
+    state.mediaRecorder.stop();
+    ui.recordVoice.textContent = "Record Voice";
+    ui.voiceStudioStatus.textContent = "Recording stopped. Save the sample if it sounds good.";
+    return;
+  }
+
+  state.voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  state.recordedChunks = [];
+  state.mediaRecorder = new MediaRecorder(state.voiceStream);
+  state.mediaRecorder.ondataavailable = (event) => {
+    if (event.data.size > 0) {
+      state.recordedChunks.push(event.data);
+    }
+  };
+  state.mediaRecorder.onstop = () => {
+    state.voiceStream?.getTracks().forEach((track) => track.stop());
+  };
+  state.mediaRecorder.start();
+  ui.recordVoice.textContent = "Stop Recording";
+  ui.voiceStudioStatus.textContent = "Recording your voice sample now. Speak clearly for 5 to 10 seconds.";
+}
+
+async function saveVoiceSample() {
+  if (state.recordedChunks.length === 0) {
+    ui.voiceStudioStatus.textContent = "Record a voice sample first.";
+    return;
+  }
+
+  const blob = new Blob(state.recordedChunks, { type: "audio/webm" });
+  const base64Audio = await blobToBase64(blob);
+  const label = ui.voiceLabel.value.trim() || "My Voice";
+
+  const payload = await postJson("/api/voice-profiles", {
+    label,
+    mimeType: blob.type || "audio/webm",
+    base64Audio
+  });
+
+  ui.voiceStudioStatus.textContent = payload.message;
+  state.recordedChunks = [];
+  ui.voiceLabel.value = "";
+  await refreshVoiceProfiles();
+}
+
+async function updatePreferences(patch) {
+  await postJson("/api/preferences", patch);
 }
 
 async function fetchJson(url) {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: buildAuthHeaders(false)
+  });
   if (!response.ok) {
-    throw new Error(await response.text());
+    throw new Error(`Request failed: ${response.status}`);
   }
   return response.json();
 }
@@ -448,44 +664,62 @@ async function postJson(url, body) {
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...buildAuthHeaders(true)
     },
     body: JSON.stringify(body)
   });
+
   if (!response.ok) {
-    throw new Error(await response.text());
+    const text = await response.text();
+    throw new Error(text || `Request failed: ${response.status}`);
   }
+
   return response.json();
 }
 
-function formatDateTime(value) {
-  return new Intl.DateTimeFormat("en", {
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  }).format(new Date(value));
+async function runPrivateRefresh(target, url) {
+  try {
+    const data = await fetchJson(url);
+    target.textContent = JSON.stringify(data, null, 2);
+  } catch (error) {
+    target.textContent =
+      "Private owner-only data is hidden here. Open the dashboard on your laptop or enter your owner token.";
+  }
 }
 
-function formatDate(value) {
-  return new Intl.DateTimeFormat("en", {
-    month: "short",
-    day: "numeric"
-  }).format(new Date(value));
+async function refreshPrivatePanels() {
+  await Promise.allSettled([
+    refreshArchitecture(),
+    refreshMemory(),
+    refreshPerformance(),
+    refreshVoiceProfiles(),
+    refreshBrain()
+  ]);
 }
 
-function formatShortDate(value) {
-  return new Intl.DateTimeFormat("en", {
-    month: "numeric",
-    day: "numeric"
-  }).format(new Date(value));
+function buildAuthHeaders(includeJsonContentType) {
+  return {
+    ...(includeJsonContentType ? {} : {}),
+    ...(state.ownerToken ? { "X-Aura-Owner-Token": state.ownerToken } : {})
+  };
 }
 
-function escapeHtml(value) {
-  return String(value ?? "")
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const result = String(reader.result);
+      resolve(result.split(",")[1] ?? "");
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function escapeHtml(text) {
+  return text
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    .replaceAll(">", "&gt;");
 }
