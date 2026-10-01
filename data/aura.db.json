@@ -4,7 +4,7 @@
     "assistantName": "AURA",
     "ownerName": "vignesh",
     "createdAt": "2026-04-24T00:00:00.000Z",
-    "updatedAt": "2026-09-04T15:10:07.018Z"
+    "updatedAt": "2026-10-01T03:03:14.652Z"
   },
   "preferences": {
     "inputLanguage": "en-IN",
@@ -16,30 +16,126 @@
   },
   "profile": {
     "identity": {
-      "preferredName": "Nila",
+      "preferredName": "Vignesh",
       "aliases": [
         "Arun",
-        "Nila"
+        "Nila",
+        "Vignesh"
       ],
       "facts": {
         "preferredName": {
           "key": "preferredName",
-          "value": "Nila",
-          "sourceText": "my name is Nila",
+          "value": "Vignesh",
+          "sourceText": "my name is Vignesh",
           "createdAt": "2026-04-27T03:54:49.613Z",
-          "updatedAt": "2026-04-27T03:59:20.549Z"
+          "updatedAt": "2026-10-01T02:56:59.462Z"
         }
       }
     },
     "voiceProfiles": [],
     "activeVoiceProfileId": null,
     "languagesUsed": [],
-    "favoriteApps": [],
+    "favoriteApps": [
+      "chrome"
+    ],
     "favoriteWebsites": [],
     "conversationStyle": "friendly",
     "lastKnownMood": "supportive"
   },
   "memories": [
+    {
+      "id": "7a168c73-db3f-4d10-8543-78e6b157cfa3",
+      "kind": "conversation",
+      "text": "User: can u open a new tab in chrome ?\nAURA: I am in local offline mode right now, master. I can still help with commands, memory, tasks, and laptop actions. I also found this in memory: User: what is your name\nAURA: I am AURA, your local-first laptop assistant, master. I can remember facts, open apps, track tasks, and work offline with my local brain. 😊 For advanced long answers, connect OpenAI online or Ollama offline.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-10-01T03:03:14.652Z"
+    },
+    {
+      "id": "b335742c-f600-43ac-9eed-fcea33e7afb3",
+      "kind": "conversation",
+      "text": "User: what is your name\nAURA: I am AURA, your local-first laptop assistant, master. I can remember facts, open apps, track tasks, and work offline with my local brain. 😊",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-10-01T03:02:37.318Z"
+    },
+    {
+      "id": "d79ef3a1-6733-4f30-b85e-fd9d31f86821",
+      "kind": "conversation",
+      "text": "User: hii\nAURA: I am in local offline mode right now, master. I can still help with commands, memory, tasks, and laptop actions. I also found this in memory: Stored preferredName: Vignesh For advanced long answers, connect OpenAI online or Ollama offline.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-10-01T03:02:06.329Z"
+    },
+    {
+      "id": "e1d6c021-7184-4211-917f-d029f1ed46b3",
+      "kind": "conversation",
+      "text": "User: hi\nAURA: I am in local offline mode right now, master. I can still help with commands, memory, tasks, and laptop actions. I also found this in memory: Stored preferredName: Vignesh For advanced long answers, connect OpenAI online or Ollama offline.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "local-fallback"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-10-01T02:59:07.786Z"
+    },
+    {
+      "id": "72de5f09-565f-438f-9512-9b537f121436",
+      "kind": "assistant-presence",
+      "text": "AURA: AURA is working for you, master.",
+      "language": "en-US",
+      "tags": [
+        "startup-greeting",
+        "assistant-initiated"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-10-01T02:58:22.159Z"
+    },
+    {
+      "id": "5c8fee85-c666-43c9-9cc2-1c423dfddf0a",
+      "kind": "conversation",
+      "text": "User: my name is Vignesh\nAURA: I will remember that your name is Vignesh.",
+      "language": "en-US",
+      "tags": [
+        "conversation",
+        "profile-memory"
+      ],
+      "importance": 2,
+      "metadata": {},
+      "createdAt": "2026-10-01T02:56:59.466Z"
+    },
+    {
+      "id": "a2a7ba49-0c33-4c48-a8fe-d61294f70818",
+      "kind": "personal-fact",
+      "text": "Stored preferredName: Vignesh",
+      "language": "en-US",
+      "tags": [
+        "fact",
+        "preferredName"
+      ],
+      "importance": 10,
+      "metadata": {
+        "sourceText": "my name is Vignesh"
+      },
+      "createdAt": "2026-10-01T02:56:59.463Z"
+    },
     {
       "id": "cc4a9d95-ea4c-4bf3-b2f6-beb0601f773c",
       "kind": "conversation",
@@ -410,6 +506,190 @@
     }
   ],
   "events": [
+    {
+      "id": "bbf9ac10-32cb-42a4-aaec-d41d68ae7886",
+      "type": "conversation",
+      "text": "can u open a new tab in chrome ?",
+      "success": true,
+      "latencyMs": 30,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-10-01T03:03:14.650Z"
+    },
+    {
+      "id": "d48743ae-8ac3-4aff-a298-eb91608a509f",
+      "type": "voice",
+      "text": "can u open a new tab in chrome ?",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-10-01T03:03:14.620Z"
+    },
+    {
+      "id": "8169e1c4-95e1-4c8d-ad1b-fb9bfd069ceb",
+      "type": "conversation",
+      "text": "what is your name",
+      "success": true,
+      "latencyMs": 14,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-10-01T03:02:37.317Z"
+    },
+    {
+      "id": "407a1c88-c3f6-489a-b1bc-88c2f2f7064f",
+      "type": "voice",
+      "text": "what is your name",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-10-01T03:02:37.302Z"
+    },
+    {
+      "id": "e9024675-1387-4824-ad76-1aff8861fa2c",
+      "type": "conversation",
+      "text": "hii",
+      "success": true,
+      "latencyMs": 41,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-10-01T03:02:06.328Z"
+    },
+    {
+      "id": "14bf432a-953a-4ac4-bd74-e7fdf035a75d",
+      "type": "voice",
+      "text": "hii",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-10-01T03:02:06.287Z"
+    },
+    {
+      "id": "f0dc4fcd-e079-4c6c-9dff-8c39d1247900",
+      "type": "conversation",
+      "text": "hi",
+      "success": true,
+      "latencyMs": 40,
+      "metadata": {
+        "language": "en-US",
+        "provider": "local-fallback"
+      },
+      "createdAt": "2026-10-01T02:59:07.785Z"
+    },
+    {
+      "id": "45d797e6-f83d-4216-be0f-41aa047baf5a",
+      "type": "voice",
+      "text": "hi",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "text"
+      },
+      "createdAt": "2026-10-01T02:59:07.745Z"
+    },
+    {
+      "id": "5de17c32-77d6-40d7-9e51-b4ef230dc1c4",
+      "type": "command",
+      "text": "scroll up",
+      "success": false,
+      "latencyMs": 3332,
+      "metadata": {
+        "stderr": "I/O Error. (Exception from HRESULT: 0x80028CA2 (TYPE_E_IOERROR))\r\nAt line:4 char:5\r\n+     $wshell.SendKeys('{PGUP}{PGUP}{PGUP}')\r\n+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (:) [], COMException\r\n    + FullyQualifiedErrorId : System.Runtime.InteropServices.COMException",
+        "stdout": "",
+        "language": "en-US",
+        "actionName": "scroll-window"
+      },
+      "createdAt": "2026-10-01T02:58:58.488Z"
+    },
+    {
+      "id": "e3d10e9d-a064-434d-a5ad-a9cb7ccb0303",
+      "type": "voice",
+      "text": "scroll up",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "button"
+      },
+      "createdAt": "2026-10-01T02:58:55.149Z"
+    },
+    {
+      "id": "ec9ecb98-1826-44f6-9d7b-ff200d51944a",
+      "type": "presence-prompt",
+      "text": "AURA is working for you, master.",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "reason": "startup-greeting",
+        "language": "en-US"
+      },
+      "createdAt": "2026-10-01T02:58:22.156Z"
+    },
+    {
+      "id": "7d2afb2c-4cf1-4252-b0bb-2a07744ea9c5",
+      "type": "command",
+      "text": "show tasks",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "stderr": "",
+        "stdout": "",
+        "language": "en-US",
+        "actionName": "show-tasks"
+      },
+      "createdAt": "2026-10-01T02:56:59.476Z"
+    },
+    {
+      "id": "bc1cef64-32d4-4d64-8bb1-4fac9c10e322",
+      "type": "voice",
+      "text": "show tasks",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-10-01T02:56:59.469Z"
+    },
+    {
+      "id": "42281256-bebe-43d3-a685-64234ecf8878",
+      "type": "conversation",
+      "text": "my name is Vignesh",
+      "success": true,
+      "latencyMs": 15,
+      "metadata": {
+        "language": "en-US",
+        "provider": "profile-memory"
+      },
+      "createdAt": "2026-10-01T02:56:59.465Z"
+    },
+    {
+      "id": "02faf21d-9bfe-445d-8ecd-bac7d773603e",
+      "type": "voice",
+      "text": "my name is Vignesh",
+      "success": true,
+      "latencyMs": 0,
+      "metadata": {
+        "language": "en-IN",
+        "source": "test"
+      },
+      "createdAt": "2026-10-01T02:56:59.452Z"
+    },
     {
       "id": "ed675c54-5dab-468c-9745-126ef875fbc8",
       "type": "conversation",
@@ -1046,9 +1326,9 @@
     {
       "id": "5c5f76f3-757a-4d80-9e26-5b765c6d93a4",
       "actionName": "show-tasks",
-      "frequency": 1,
-      "lastUsedAt": "2026-05-01T22:19:54.432Z",
-      "lastTriggerText": "show my tasks"
+      "frequency": 2,
+      "lastUsedAt": "2026-10-01T02:56:59.477Z",
+      "lastTriggerText": "show tasks"
     }
   ],
   "tasks": [
